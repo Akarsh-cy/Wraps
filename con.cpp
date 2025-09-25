@@ -41,7 +41,7 @@ public:
 
 
  ~ArrayList(){}//empty destructor
-
+//smart pointers so no need
 
   ArrayList<T>& operator=(const ArrayList<T>& source)
   {
@@ -78,7 +78,6 @@ T& operator[](std::size_t i)const{
   }
 
 T& operator[](std::size_t i){
-    ++m_length;
     return data[i];
   }
 
@@ -98,6 +97,7 @@ friend std::istream& operator>>(std::istream& in,ArrayList<T>& source)
   {
     for(int i=0;i<source.m_capacity;++i){
       in>>source.data[i];
+      if(source.m_length<source.m_capacity)
       source.m_length++;
     }
     return in;
@@ -110,8 +110,8 @@ friend std::istream& operator>>(std::istream& in,ArrayList<T>& source)
   std::size_t capacity(){return m_capacity;}
   T getItem(std::size_t index){return data[index];}
   T at(std::size_t index){
-    if(index<=m_length){
-      return data[index];
+    if(index<m_length){
+      return &data[index];
     }
     std::cerr<<"Index invalid\n";
   }
@@ -120,7 +120,7 @@ friend std::istream& operator>>(std::istream& in,ArrayList<T>& source)
     if(size>m_capacity){
       auto temp=std::move(data);
       data =std::make_unique<T[]>(size);
-     std::move(temp.get(),temp.get()+m_capacity,data.get());
+     std::copy(temp.get(),temp.get()+m_capacity,data.get());
       m_capacity=size;
     }
    if(size<m_capacity){
@@ -128,12 +128,17 @@ friend std::istream& operator>>(std::istream& in,ArrayList<T>& source)
    m_capacity=size;
    m_length=size;
    data =std::make_unique<T[]>(size);
-  std::move(temp.get(),temp.get()+size,data.get());
+  std::copy(temp.get(),temp.get()+size,data.get());
     }
   }
 
   void push(T input){
-    if(m_capacity==m_length){
+    if(m_capacity==0){
+      resize(1);
+      data[m_length]=input;
+      m_length++;
+    }
+    if(m_capacity==m_length && m_capacity!=0){
       resize(2*m_capacity);
      data[m_length]=input;
       m_length++;
@@ -145,13 +150,13 @@ friend std::istream& operator>>(std::istream& in,ArrayList<T>& source)
   }
 
   void pop(){
+    if(m_length>0)
     m_length=m_length-1;
   }
 
   void reserve(std::size_t size){
-    m_length=0;
-    m_capacity=size;
     resize(size);
+    m_length=0;
   }
 
 };//class ends
@@ -163,7 +168,7 @@ ArrayList a{1,2,3,4,5};
            <<"\nLength:"<<a.length()
            <<"\nCapacity:"<<a.capacity()
            <<std::endl;
-a.reserve(10);
+a.resize(10);
   std::cout<<"Array is:"<<a
            <<"\nLength:"<<a.length()
            <<"\nCapacity:"<<a.capacity()
