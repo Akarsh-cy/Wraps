@@ -60,7 +60,7 @@ public:
      m_capacity=source.m_capacity;
      data=std::make_unique<T[]>(m_capacity);
 
-     std::copy(source.data.get(),source.data.get()+m_capacity,data.get());
+     std::copy(source.data.get(),source.data.get()+m_length,data.get());
     }
     return *this;
   }
@@ -84,7 +84,7 @@ public:
 
 
 T& operator[](std::size_t i)const{
-    if(i<m_capacity)
+    if(i<m_length)
     return data[i];
     else{
       throw
@@ -94,7 +94,7 @@ T& operator[](std::size_t i)const{
 
 
 T& operator[](std::size_t i){
-    if(i<m_capacity)
+    if(i<m_length)
     return data[i];
     else{
       throw
@@ -127,6 +127,8 @@ friend std::istream& operator>>(std::istream& in,ArrayList<T>& source)
   //member functions
   std::size_t length()const{return m_length;}
   std::size_t capacity()const{return m_capacity;}
+
+
   T getItem(std::size_t index)const{
    if(index<m_capacity)
     return data[index];
@@ -139,7 +141,7 @@ friend std::istream& operator>>(std::istream& in,ArrayList<T>& source)
 
 T& at(std::size_t index){
     if(index<m_length){
-      return &data[index];
+      return data[index];
     }
     throw
     std::out_of_range("Index invalid\n");
@@ -149,7 +151,7 @@ T& at(std::size_t index){
   //const overload
 T& at(std::size_t index)const{
     if(index<m_length){
-      return &data[index];
+      return data[index];
     }
     throw
     std::out_of_range("Index invalid\n");
@@ -201,19 +203,22 @@ void reserve(std::size_t size){
     resize(size);
   }
 
+
+void clear(){
+    m_length=0;
+  }
 };//class ends
 
 int main(){
-ArrayList a{1,2,3,4,5};
+ArrayList a{"string","like","python","dictionary"};
 
   std::cout<<"Array is:"<<a
            <<"\nLength:"<<a.length()
            <<"\nCapacity:"<<a.capacity()
            <<std::endl;
-a.resize(10);
+a.push("pushed");
   std::cout<<"Array is:"<<a
            <<"\nLength:"<<a.length()
            <<"\nCapacity:"<<a.capacity()
            <<std::endl;
-
 }
