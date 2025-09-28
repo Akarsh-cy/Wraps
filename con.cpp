@@ -84,22 +84,12 @@ public:
 
 
 T& operator[](std::size_t i)const{
-    if(i<m_length)
     return data[i];
-    else{
-      throw
-      std::out_of_range("Invalid Index");
-    }
-  }
+ }
 
 
 T& operator[](std::size_t i){
-    if(i<m_length)
     return data[i];
-    else{
-      throw
-      std::out_of_range("Invalid Index");
-    }
   }
 
 
