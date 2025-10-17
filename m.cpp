@@ -23,9 +23,9 @@ p.reserve(100);
 std::vector<std::array<float,2>> v;
 v.reserve(100);
 std::vector<std::array<float,2>> po2;
-p.reserve(100);
+po2.reserve(100);
 std::vector<std::array<float,2>> vo2;
-v.reserve(100);
+vo2.reserve(100);
 
 
 
