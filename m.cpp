@@ -2,9 +2,9 @@
 #include<cmath>
 #include<vector>
 #include<array>
+#include<thread>
+
 using std::array;
-
-
 void orbit(){
 //init vars
 array<float,2> p1{3,2};
@@ -92,5 +92,5 @@ for(auto item:vo2){
 }
 
 int main(){
- orbit();
+  orbit();
 }
