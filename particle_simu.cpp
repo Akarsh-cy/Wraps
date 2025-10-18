@@ -2,6 +2,17 @@
 #include<vector>
 #include<array>
 #include<random>
+#include<iostream>
+
+
+/*A particle simulator basics version
+ * Uses the Mersenne Twister engine to assign random values to centre
+ * no of particles can be changed and range may be provided for values
+ *
+ *Will use threads to calculate the workload
+ *
+ * */
+
 
 //a struct represting the individual points
 struct Particle{
@@ -29,7 +40,7 @@ std::ostream& operator<<(std::ostream& out,const Particle& source){
   out<<"Velocity: ("<<source.v[0]<<", "<<source.v[1]<<")";
   return out;
 }
-
+//vector overload
 std::ostream& operator<<(std::ostream& out,const std::vector<Particle>& source){
 
 for(std::size_t i=0;i<source.size();++i){
@@ -38,9 +49,6 @@ for(std::size_t i=0;i<source.size();++i){
   }
   return out;
 }
-
-
-
 
 
 
