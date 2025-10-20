@@ -93,13 +93,18 @@ std::vector<Particle> render(const std::vector<Particle>& read){
   size_t quo=size/no_thread;
   size_t rem=size%no_thread;
 
-  //thread array
-  std::array<std::thread,no_thread> worker;
+  //thread vector
+  std::vector<std::thread> worker(no_thread);
 
-  for(int i=0;i<no_thread-1;++i){
+  for(int i=0;i<no_thread;++i){
 
-  worker[i]([&](i){
-  for(size_t a=size-(quo*(i+1);a<=size-(i*quo)-1;++a){
+  worker[i]=std::thread([&,i](){
+
+    size_t start =i*quo;
+    size_t end=(i==no_thread-1)?size:start+quo;
+
+
+  for(size_t a=start;a<end;++a){
 
 //position part &velo part
 
@@ -119,27 +124,14 @@ if(r==0){r=1;}
 
       }//the for loop that know which segment by which thread
 
-    })//thread end {lambda inside thread used}
+    });//thread end {lambda inside thread used}
 
   }//outer for that assignes n-1 threads
   
-  
-for(int a=0;a<=rem-1;++a){
-for(int j=0;j<2;j++){
-  for(auto item:read){
-  double r=std::pow(std::hypot(item.p[0]-read[a].p[0],item.p[1]-read[a].p[1]),3);
-if(r==0){r=1;}
-  //r may be zero will do exception later
-  double acc=(item.p[j]-read[a].p[j])/r;
-  write[a].p[j]= read[a].p[j]+ read[a].v[j]*(0.01)+0.5*acc*(0.01)*(0.01);
-    
-//veclocity part
- write[a].v[j]=read[a].p[j]+acc*0.01;
 
-        }//for iterating read array
-        }//most inside for to iterate th3 dimensions
-
-    }
+for(auto& t:worker){
+if(t.joinable())t.join();
+  }
 
 return write;
 }//render function ends
